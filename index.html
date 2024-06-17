@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>创建快捷方式</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    h2 {
+      margin-top: 0;
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    input,
+    button {
+      margin-bottom: 12px;
+      padding: 8px;
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    button {
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+
+<body>
+  <h2>创建快捷方式</h2>
+  <label for="shortcutName">名称：</label>
+  <input type="text" id="shortcutName" placeholder="输入快捷方式名称">
+  <label for="url">网址：</label>
+  <input type="text" id="url" placeholder="输入网址">
+  <button onclick="createShortcut()">创建快捷方式</button>
+
+  <script>
+    function createShortcut() {
+      var shortcutName = document.getElementById('shortcutName').value.trim();
+      var url = document.getElementById('url').value.trim();
+
+      if (!shortcutName || !url) {
+        alert('请输入快捷方式名称和网址。');
+        return;
+      }
+      var content =
+        `[{000214A0-0000-0000-C000-000000000046}]
+         [InternetShortcut]
+         IDList=
+         URL=${url}
+        `;
+
+      var fileName = shortcutName + ".url";
+
+      var blob = new Blob([content], { type: 'text/plain' });
+      var link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = fileName;
+      link.style.display = 'none';
+      document.body.appendChild(link);
+
+      link.click();
+
+      document.body.removeChild(link);
+      URL.revokeObjectURL(link.href);
+    }
+  </script>
+</body>
+
+</html>
